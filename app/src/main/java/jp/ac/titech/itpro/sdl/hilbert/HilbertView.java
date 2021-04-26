@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -14,6 +15,8 @@ public class HilbertView extends View {
     private Canvas canvas;
 
     private int order = 1;
+
+    Handler handler= new Handler();
 
     private final HilbertTurtle turtle = new HilbertTurtle(new Turtle.Drawer() {
         @Override
@@ -36,7 +39,7 @@ public class HilbertView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        //super.onDraw(canvas);
         this.canvas = canvas;
 
         int w = canvas.getWidth();
@@ -55,6 +58,16 @@ public class HilbertView extends View {
 
     public void setOrder(int n) {
         order = n;
-        invalidate();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        invalidate();
+                    }
+                });
+            }
+        }).start();
     }
 }

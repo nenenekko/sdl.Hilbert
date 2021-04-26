@@ -3,6 +3,7 @@ package jp.ac.titech.itpro.sdl.hilbert;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     private HilbertView hilbertView;
     private Button decButton;
     private Button incButton;
+
+    private final static String KEY_NAME = "MainActivity.name";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
                 display();
             }
         });
+
+        if(savedInstanceState != null){
+            order = savedInstanceState.getInt(KEY_NAME);
+        }
     }
 
     @Override
@@ -53,14 +60,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void display() {
         orderView.setText(getString(R.string.order_view_format, order));
-        hilbertView.setOrder(order);
-        decButton.setEnabled(order > 1);
-        incButton.setEnabled(order < MAX_ORDER);
+        hilbertView.setOrder(this.order);
+        decButton.setEnabled(this.order > 1);
+        incButton.setEnabled(this.order < MAX_ORDER);
     }
 
     public static void assertTrue(boolean f, String message) {
         if (BuildConfig.DEBUG && !f) {
             throw new AssertionError(message);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_NAME,order);
     }
 }
